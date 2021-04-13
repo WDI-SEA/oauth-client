@@ -26,18 +26,18 @@ const App = () => {
                 setUser(user)
             }
         } catch(err) {
-            console.log(err)
+            // console.log(err)
             console.log('the token is expired!')
-            localStorage.removeItem('jwt')
-            setUser(null)
+            handleLogout()
         }
     }, [])
 
     const handleLogout = () => {
+        console.log("Logging out...")
         if(localStorage.getItem('jwt')) {
             localStorage.removeItem('jwt')
-            setUser(null)
         }
+        setUser(null)
     }
 
     return (
@@ -55,7 +55,7 @@ const App = () => {
                         <SaveToken setUser={setUser} />
                     </Route>
                     <Route>
-                        <Profile user={user} />
+                        <Profile user={user} handleLogout={handleLogout} />
                     </Route>
                     <Route path="*">
                         <NoMatch />

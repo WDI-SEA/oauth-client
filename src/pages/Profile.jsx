@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { Redirect } from "react-router"
 import axios from 'axios'
 
-const Profile = ({ user }) => {
+const Profile = ({ user, handleLogout }) => {
     useEffect(() => {
         // Example access to the auth-locked route
         async function fetchLockedResource() {
@@ -12,13 +12,17 @@ const Profile = ({ user }) => {
             const authHeaders = {
                 'Authorization': token
             }
-            
-            const res = await axios.get(`${url}/exampleResource`, { headers: authHeaders })
-            const data = res.data
-            console.log(data)
+            try {
+                const res = await axios.get(`${url}/exampleResource`, { headers: authHeaders })
+                const data = res.data
+                console.log('This is the auth-locked data', data)
+            } catch(err) {
+                console.error(err.response.data.msg) // JWT is probably expired
+                handleLogout()
+            }
         }
         fetchLockedResource()
-    }, [])
+    }, [handleLogout])
 
     if(user) {
         return <div>
